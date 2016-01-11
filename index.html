@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8">
+<title>Cardgame of pesten</title>
+
+	<!-- 1. Load libraries -->
+    <script src="node_modules/es6-shim/es6-shim.js"></script>
+    <script src="node_modules/angular2/bundles/angular2-polyfills.js"></script>
+    <script src="node_modules/systemjs/dist/system.src.js"></script>
+    <script src="node_modules/rxjs/bundles/Rx.js"></script>
+    <script src="node_modules/angular2/bundles/angular2.dev.js"></script>
+
+    <!-- 2. Configure SystemJS -->
+    <script>
+      System.config({
+        packages: {        
+          app: {
+            format: 'register',
+            defaultExtension: 'js'
+          }
+        }
+      });
+      System.import('app/boot')
+            .then(null, console.error.bind(console));
+    </script>
+    
+    <style>
+		h1, h2 {font-size: 1em;}
+        section {
+            display: inline-block;
+            width: 12em;
+            border: 1px solid gray;
+            vertical-align: top;
+            padding: 0.5em;
+        }
+        ul {list-style: none; }
+        .messages-container {
+            width: auto;
+        }
+        .card {
+            border-radius: 0.5em;
+        }
+    </style>
+
+  </head>
+
+  <!-- 3. Display the application -->
+<body>
+
+    <h1>The game</h1>
+	<game-body>Loading ...</game-body>
+
+</body>
+</html>
