@@ -1,43 +1,45 @@
 import {Component} from 'angular2/core';
 import {Deck, Card, NullCard} from './deck';
 import {Player, HumanPlayer, ComputerPlayer} from './player'
+import {Labels} from './labels'
 
 @Component({
     selector: 'game-body',
-    template: ` <section>
-                    <h2>Deck</h2>
-                    <button id="restart" (click)="restart()">Restart</button>
-                    <button id="draw" (click)="humanDraw()">Draw</button>
-                    <ul><li *ngFor="#card of deck.getCards()">{{card.toString()}}</li></ul>
-                </section>
+    template: ` <aside class="menu" id="toolbar">
+                    <button id="restart" (click)="restart()" class="button">{{labels.button.restart}}</button>
+                    <button id="draw" (click)="humanDraw()" class="button button-primary">{{labels.button.draw}}</button>
+                    <button id="toggle-language" (click)="toggleLanguage()" class="button">{{labels.toggle.language}}</button>
+                    <label><input type="checkbox" id="show-computer" (click)="toggleComputerHand()" /> {{labels.toggle.computerhand}}</label>
+                </aside>
                 <section>
-                    <h2>Active card</h2>
-                    <div>{{activeCard.toString()}}</div>
+                    <h2>{{labels.header.activecard}}</h2>
+                    <div class="card">{{activeCard.toString()}}</div>
                 </section>
 				<section>
-					<h2>Human player</h2>
+					<h2>{{labels.header.humanplayer}}</h2>
 					<!-- TODO only make throwable cards a link -->
 					<ul><li *ngFor="#card of humanHand" class="card"><a href="#" (click)="humanThrow(card)">{{card.toString()}}</a></li></ul>
 				</section>
-				<section>
-					<h2>Computer player</h2>
-					<ul><li *ngFor="#card of computerHand">{{card.toString()}}</li></ul>
-				</section>
 				<section class="messages-container">
+					<h2>{{labels.header.messages}}</h2>
 					<ul><li *ngFor="#message of messages">{{message}}</li></ul>
+				</section>
+				<section id="computerhand" *ngIf="showComputerHand">
+					<h2>{{labels.header.computerplayer}}</h2>
+					<ul><li *ngFor="#card of computerHand" class="card">{{card.toString()}}</li></ul>
 				</section>`
 
 })
 /**
  * TODO
- * - GUI: visual cards instead of textual ones
+ * - GUI: suits as a graphic
  * - A2: create a card component
  * - OOAD: create a player class
  * - GUI: better change hints
  * - GUI: better alert dialog
  * - AI: smarter decision which cards to throw
  * - TESTS: functional, integration and units
- * - I18N: message bundles
+  * - GUI: logo/favicon etc.
  */
 export class GameComponent {
 
@@ -46,11 +48,18 @@ export class GameComponent {
 	public humanHand:Card[] = [];
 	public activeCard: Card = new NullCard();
 	public messages: string[] = [];
+	private showComputerHand: boolean = false;
+
+	private labels: any = {};
+	// TODO observable property?
+	private language: string = "nl";
 
     constructor() {}
 
 	ngOnInit() {
 		console.log("GameComponent.onInit()");
+		this.labels = (new Labels(this.language)).get();
+
 		this.deck = new Deck();
 		this.computerHand = this.deck.deal(7);
 		this.humanHand = this.deck.deal(7);
@@ -65,22 +74,34 @@ export class GameComponent {
 	}
 
 	public restart() : void {
-		this.ngOnInit();
+		if (confirm(this.labels.messages.confirmrestart)) {
+			this.ngOnInit();
+		}
+	}
+
+	public toggleComputerHand() : void {
+		this.messages.push(this.labels.messages.showcomputerhand);
+		this.showComputerHand = !this.showComputerHand;
+	}
+
+	public toggleLanguage() : void {
+		(this.language === "en") ? this.language = "nl" : this.language = "en";
+		this.labels = (new Labels(this.language)).get();
 	}
 
 	public humanThrow(card:Card) : void {
 		if (card.canBeThrownOn(this.activeCard)) {
 			GameComponent.removeCardFromHand(card, this.humanHand);
 			this.setActiveCard(card);
-			this.messages.push("human throws: " + this.activeCard.toString());
+			this.messages.push(this.labels.messages.humanthrows + this.activeCard.toString());
 			if (this.humanHand.length === 0) {
-				this.messages.push("human, you win!");
-				alert("human, you win!");
+				this.messages.push(this.labels.messages.humanwins);
+				alert(this.labels.messages.humanwins);
 				return;
 			}
 			this.computerThrow();
 		} else {
-			this.messages.push("human, your move is not allowed");
+			this.messages.push(this.labels.messages.humannotallowed);
 		}
 	}
 
@@ -88,32 +109,33 @@ export class GameComponent {
 		for (var i = 0, len = this.computerHand.length; i < len; i++) {
 			if (this.computerHand[i].canBeThrownOn(this.activeCard)) {
 				this.setActiveCard(this.computerHand[i]);
-				this.messages.push("computer throws: " + this.activeCard.toString());
+				this.messages.push(this.labels.messages.computerthrows + this.activeCard.toString());
 				GameComponent.removeCardFromHand(this.computerHand[i], this.computerHand);
 				if (this.computerHand.length === 0) {
-					this.messages.push("computer, you win!");
-					alert("computer, you win!");
+					this.messages.push(this.labels.messages.computerwins);
+					alert(this.labels.messages.computerwins);
 					return;
 				}
-				this.messages.push("turn goes to human player");
+				this.messages.push(this.labels.messages.turngoesto + this.labels.player.human);
 				return;
 			} else {
-				this.messages.push("computer, your move is not allowed");
+				this.messages.push(this.labels.messages.computernotallowed);
 			}
 		}
 		this.draw(this.computerHand);
-		this.messages.push("turn goes to computer player");
+		this.messages.push(this.labels.messages.turngoesto + this.labels.player.computer);
 	}
 
 	private turn() : void {
 		this.activeCard = this.deck.shift() || new NullCard();
-		this.messages.push("turned first card: " + this.activeCard.toString());
+		this.messages.push(this.labels.messages.firstcard + this.activeCard.toString());
 	}
 
 	private draw(hand: Card[]) : void {
-		hand.push(this.deck.shift());
-		this.messages.push("a player draws a card");
-		this.messages.push("turn goes to another player");
+		var card: Card = this.deck.shift();
+		hand.push(card);
+		this.messages.push(this.labels.messages.carddraw + card.toString());
+		this.messages.push(this.labels.messages.turnover);
 	}
 
 	private static removeCardFromHand(card:Card, hand:Card[]):void {

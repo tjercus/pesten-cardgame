@@ -6,11 +6,11 @@ export enum Suit {
 }
 
 export class Card {
-    constructor(public suit: Suit, public rank: number) {
+    constructor(private suit: Suit, private rank: number) {
         //
     }
     toString() {
-        return this.suit + " " + this.rank;
+        return this.suit.substring(0, 1) + " " + this.rank;
     }
 
 	canBeThrownOn(activeCard:Card): boolean {
@@ -91,7 +91,7 @@ export class Deck {
 		return this.cards.shift();
 	}
 
-	public deal(size:Number):Card[] {
+	public deal(size:number):Card[] {
 		console.log("deal");
 		return this.cards.splice(0, size);
 	}
