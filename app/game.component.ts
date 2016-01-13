@@ -13,12 +13,12 @@ import {Labels} from './labels'
                 </aside>
                 <section>
                     <h2>{{labels.header.activecard}}</h2>
-                    <div class="card">{{activeCard.toString()}}</div>
+                    <div class="card"><div class="{{activeCard.suit}}"></div>{{activeCard.rank}}</div>
                 </section>
 				<section>
 					<h2>{{labels.header.humanplayer}}</h2>
 					<!-- TODO only make throwable cards a link -->
-					<ul><li *ngFor="#card of humanHand" class="card"><a href="#" (click)="humanThrow(card)">{{card.toString()}}</a></li></ul>
+					<ul><li *ngFor="#card of humanHand" class="card" (click)="humanThrow(card)"><div class="{{card.suit}}"></div>{{card.rank}}</li></ul>
 				</section>
 				<section class="messages-container">
 					<h2>{{labels.header.messages}}</h2>
@@ -26,7 +26,7 @@ import {Labels} from './labels'
 				</section>
 				<section id="computerhand" *ngIf="showComputerHand">
 					<h2>{{labels.header.computerplayer}}</h2>
-					<ul><li *ngFor="#card of computerHand" class="card">{{card.toString()}}</li></ul>
+					<ul><li *ngFor="#card of computerHand" class="card"><div class="{{activeCard.suit}}"></div>{{card.rank}}</li></ul>
 				</section>`
 
 })
