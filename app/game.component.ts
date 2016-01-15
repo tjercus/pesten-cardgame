@@ -1,10 +1,13 @@
 import {Component} from 'angular2/core';
 import {Deck, Card, NullCard} from './deck';
 import {Player, HumanPlayer, ComputerPlayer} from './player'
+import {CardComponent} from './card.component'
 import {Labels} from './labels'
+import {Input} from "angular2/core";
 
 @Component({
     selector: 'game-body',
+	directives: [CardComponent],
     template: ` <aside class="menu" id="toolbar">
                     <button id="restart" (click)="restart()" class="button">{{labels.button.restart}}</button>
                     <button id="draw" (click)="humanDraw()" class="button button-primary">{{labels.button.draw}}</button>
@@ -13,7 +16,7 @@ import {Labels} from './labels'
                 </aside>
                 <section>
                     <h2>{{labels.header.activecard}}</h2>
-                    <div class="card"><div class="{{activeCard.suit}}"></div>{{activeCard.rank}}</div>
+                    <card [card]="activeCard"></card>
                 </section>
 				<section>
 					<h2>{{labels.header.humanplayer}}</h2>
@@ -27,8 +30,8 @@ import {Labels} from './labels'
 				<section id="computerhand" *ngIf="showComputerHand">
 					<h2>{{labels.header.computerplayer}}</h2>
 					<ul><li *ngFor="#card of computerHand" class="card"><div class="{{activeCard.suit}}"></div>{{card.rank}}</li></ul>
-				</section>`
-
+				</section>
+				`
 })
 /**
  * TODO
