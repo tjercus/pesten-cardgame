@@ -21,7 +21,7 @@ import {Input} from "angular2/core";
 				<section>
 					<h2>{{labels.header.humanplayer}}</h2>
 					<!-- TODO only make throwable cards a link -->
-					<ul><li *ngFor="#card of humanHand" class="card" (click)="humanThrow(card)"><div class="{{card.suit}}"></div>{{card.rank}}</li></ul>
+					<ul class="hand"><li *ngFor="#card of humanHand" (click)="humanThrow(card)"><card [card]="card"></card></li></ul>
 				</section>
 				<section class="messages-container">
 					<h2>{{labels.header.messages}}</h2>
@@ -29,20 +29,18 @@ import {Input} from "angular2/core";
 				</section>
 				<section id="computerhand" *ngIf="showComputerHand">
 					<h2>{{labels.header.computerplayer}}</h2>
-					<ul><li *ngFor="#card of computerHand" class="card"><div class="{{activeCard.suit}}"></div>{{card.rank}}</li></ul>
+					<ul class="hand"><li *ngFor="#card of computerHand"><card [card]="card"></card></li></ul>
 				</section>
 				`
 })
 /**
  * TODO
- * - GUI: suits as a graphic
- * - A2: create a card component
  * - OOAD: create a player class
  * - GUI: better change hints
  * - GUI: better alert dialog
  * - AI: smarter decision which cards to throw
  * - TESTS: functional, integration and units
-  * - GUI: logo/favicon etc.
+ * - GUI: logo/favicon etc.
  */
 export class GameComponent {
 
