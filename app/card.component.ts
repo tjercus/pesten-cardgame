@@ -10,6 +10,6 @@ export class CardComponent {
 	public card: Card;
 
 	ngOnInit() {
-		console.log("GameComponent.onInit()");
+		console.log("CardComponent.onInit()");
 	}
 }

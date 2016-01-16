@@ -4,3 +4,6 @@ node_modules/
 
 *.js
 *.js.map
+
+app/*.js
+app/*.js.map

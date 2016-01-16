@@ -14,22 +14,22 @@ import {Input} from "angular2/core";
                     <button id="toggle-language" (click)="toggleLanguage()" class="button">{{labels.toggle.language}}</button>
                     <label><input type="checkbox" id="show-computer" (click)="toggleComputerHand()" /> {{labels.toggle.computerhand}}</label>
                 </aside>
-                <section>
+                <section id="activecard-container">
                     <h2>{{labels.header.activecard}}</h2>
                     <card [card]="activeCard"></card>
                 </section>
-				<section>
+				<section id="humanhand-container">
 					<h2>{{labels.header.humanplayer}}</h2>
 					<!-- TODO only make throwable cards a link -->
 					<ul class="hand"><li *ngFor="#card of humanHand" (click)="humanThrow(card)"><card [card]="card"></card></li></ul>
-				</section>
-				<section class="messages-container">
-					<h2>{{labels.header.messages}}</h2>
-					<ul><li *ngFor="#message of messages">{{message}}</li></ul>
-				</section>
-				<section id="computerhand" *ngIf="showComputerHand">
+				</section>		
+				<section id="computerhand-container" *ngIf="showComputerHand">
 					<h2>{{labels.header.computerplayer}}</h2>
 					<ul class="hand"><li *ngFor="#card of computerHand"><card [card]="card"></card></li></ul>
+				</section>
+				<section id="messages-container">
+					<h2>{{labels.header.messages}}</h2>
+					<ul><li *ngFor="#message of messages">{{message}}</li></ul>
 				</section>
 				`
 })
